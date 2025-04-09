@@ -1,1 +1,1 @@
-# NixOS配置文件
+# README.md 内容占位
