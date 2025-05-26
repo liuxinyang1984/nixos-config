@@ -1,10 +1,10 @@
 # modules/services/redis.nix
-{ config, pkgs, ... }:
-
 {
   services.redis = {
     enable = true;
     package = pkgs.redis;
-    password = "xmlxzl"; # 设置密码
+    password = "xmlxzl";
+    bindAddress = "0.0.0.0";  # 监听所有网卡
   };
 }
+

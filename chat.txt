@@ -1,0 +1,125 @@
+1. 目录结构
+nixos-config/
+├── flake.nix
+├── hosts/
+│   └── NixOS/
+│       └── configuration.nix
+├── modules/
+│   ├── programs/
+│   │   └── neovim/
+│   │       ├── autoload/
+│   │       │   └── plug.vim
+│   │       ├── init.vim
+│   │       └── neovim.nix
+│   ├── desktop/
+│   │   └── hyprland/
+│   │       ├── fonts.conf
+│   │       ├── fonts.nix
+│   │       ├── hyprland.nix
+│   │       └── input_method.nix
+│   ├── services/
+│   │   ├── nginx.nix
+│   │   ├── php.nix
+│   │   ├── mariadb.nix
+│   │   ├── redis.nix
+│   │   └── rabbitmq.nix
+│   ├── system/
+│   │   ├── hardware.nix
+│   │   ├── systemd.nix
+│   │   └── timezone.nix
+│   └── ...
+└── home/
+    └── cookie/
+        ├── home.nix
+
+2. flake.nix内容
+{
+  description = "My NixOS Configuration";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    flake-utils.url = "github:numtide/flake-utils";
+
+    # 👇 引入 home-manager
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+  };
+
+  outputs = { self, nixpkgs, flake-utils, home-manager, ... }:
+    flake-utils.lib.eachSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+
+        # 递归列出所有 modules 下的 .nix 文件
+        listNixFiles = dir: let
+          entries = builtins.attrNames (builtins.readDir dir);
+          files = builtins.filter (f: builtins.match "\\.nix$" f != null) entries;
+          dirs = builtins.filter (f: builtins.pathType (dir + "/" + f) == "directory") entries;
+        in
+          (map (f: dir + "/" + f) files)
+          ++ builtins.concatLists (map (d: listNixFiles (dir + "/" + d)) dirs);
+
+        modules = [
+          # 引入主机配置
+          ./hosts/NixOS/configuration.nix
+
+          # 👇 引入 home-manager 的 NixOS 模块
+          home-manager.nixosModules.home-manager
+        ] ++ listNixFiles ./modules;
+
+      in {
+        nixosConfigurations.NixOS = pkgs.lib.nixosSystem {
+          system = system;
+          modules = modules;
+        };
+      }
+    );
+}
+
+3. hosts/NixOS/configuration.nix 
+{ config, lib, pkgs, ... }:
+
+{
+  # 自动加载 modules 下的所有模块，flake.nix 中已处理，无需手动 imports
+  # 如果要添加 home-manager 的配置，在这里引入 home.nix
+
+  imports = [
+    # 你的用户 home-manager 配置路径
+    ../../home/cookie/home.nix
+  ];
+
+  # 启用 nix flakes 和 nix-command
+  nix = {
+    settings.experimental-features = [ "nix-command" "flakes" ];
+    registry.nixpkgs.flake = pkgs;
+  };
+
+  # 允许非自由软件
+  nixpkgs.config.allowUnfree = true;
+
+  # 指定系统版本
+  system.stateVersion = "23.11";
+}
+
+4. home/cookie/home.nix
+{ config, pkgs, ... }:
+
+let
+  neovimCfg = import ../../modules/programs/neovim/neovim.nix { inherit config pkgs; };
+in {
+  home.username = "cookie";
+  home.homeDirectory = "/home/cookie";
+
+  programs.home-manager.enable = true;
+
+  # 合并 neovim 配置
+  programs.neovim = neovimCfg.programs.neovim;
+
+  home.file = neovimCfg.home.file;
+
+  home.stateVersion = "23.11";
+}
+
+
+
+
