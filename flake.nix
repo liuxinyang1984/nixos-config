@@ -30,6 +30,21 @@
           }
         ];
       };
+      cookie-kvm = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/default.nix
+          ./modules/virtio.nix
+          home-manager.nixosModules.home-manager {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = { inherit inputs; };
+              users.cookie = import ./home-manager/users/cookie.nix;
+            };
+          }
+        ];
+      };
     };
   };
 }
