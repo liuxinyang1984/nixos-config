@@ -3,7 +3,6 @@
 
 {
   imports = [
-    ../common.nix         # 共享配置
     ../../modules/neovim.nix  # Neovim 配置
     ../../modules/zsh.nix     # Zsh 配置
   ];
@@ -32,4 +31,12 @@
       echo "Hello, Cookie!"
     '';
   };
+     # 引用外部 authorized_keys 文件
+    ".ssh/authorized_keys".source = ../../ssh/authorized_keys;
+
+    ".ssh".directory = {
+      recursive = true;
+      permissions = "0700";
+    };
+
 }

@@ -16,7 +16,8 @@
         system = "x86_64-linux";
         modules = [
           ./hosts/default.nix
-          
+          ./packages/base.nix
+
           # Home Manager for cookie user
           home-manager.nixosModules.home-manager {
             home-manager = {
@@ -35,6 +36,7 @@
         modules = [
           ./hosts/default.nix
           ./modules/virtio.nix
+          ./packages/base.nix
           home-manager.nixosModules.home-manager {
             home-manager = {
               useGlobalPkgs = true;

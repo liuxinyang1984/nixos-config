@@ -5,6 +5,10 @@
 " |_| \_|\___|\___/ \_/  |_|_| |_| |_|
 "
 """""""""""""""""""""""""""""""""""""""
+if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+  silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
                                     
 set nocompatible                "去除VI一至性
 syntax on                   	" 自动语法高亮
