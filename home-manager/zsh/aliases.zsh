@@ -1,4 +1,4 @@
-
+#home-manager/zsh/aliases.zsh
 # alias ra='ranger'
 alias ra='yazi'
 alias scrot='scrot ~/Pictures/Screenshots/%Y-%m-%d_%H%M%S.png'
