@@ -1,4 +1,3 @@
-
 "  _   _         __     ___           
 " | \ | | ___  __\ \   / (_)_ __ ___  
 " |  \| |/ _ \/ _ \ \ / /| | '_ ` _ \ 
@@ -411,35 +410,3 @@ let g:rnvimr_layout = { 'relative': 'editor',
             \ 'row': 0,
             \ 'style': 'minimal' }
 let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
-
-
-
-" 使用 Lua 配置 prettier.nvim
-" lua << EOF
-" require('prettier').setup({
-  " cli_options = {
-    " arrow_parens = "always",
-    " bracket_spacing = true,
-    " bracket_same_line = false,
-    " embedded_language_formatting = "auto",
-    " end_of_line = "lf",
-    " html_whitespace_sensitivity = "css",
-    " jsx_single_quote = false,
-    " print_width = 80,
-    " prose_wrap = "preserve",
-    " quote_props = "as-needed",
-    " semi = true,
-    " single_attribute_per_line = false,
-    " single_quote = false,
-    " tab_width = 2,
-    " trailing_comma = "es5",
-    " use_tabs = false,
-    " vue_indent_script_and_style = false,
-  " },
-  " config_precedence = "prefer-file", -- 或 "cli-override" 或 "file-override"
-  " filetypes = {
-    " "typescript", "typescriptreact", "javascript", "javascriptreact", "json", "markdown", "css", "scss", "html", "php"
-  " },
-" })
-" EOF
-"
