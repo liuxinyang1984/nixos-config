@@ -6,14 +6,14 @@
   networking.hostName = "NixOs";
   system.stateVersion = "23.11";
 
-  # 文件系统
+ # 文件系统
   fileSystems."/" = {
-    device = "/dev/vda2";
+    device = "/dev/disk/by-uuid/a60de916-b11b-469c-969b-186b9c8bba45";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/vda1";
+    device = "/dev/disk/by-uuid/6046-818A";
     fsType = "vfat";
   };
 
@@ -22,7 +22,7 @@
     systemd-boot.enable = true;
     efi = {
       canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot/efi";
+      efiSysMountPoint = "/boot";
     };
   };
 

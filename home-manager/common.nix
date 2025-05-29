@@ -8,7 +8,7 @@
   # 基础软件包
   home.packages = with pkgs; [
     git curl wget
-    ripgrep fzf exa bat
+    ripgrep fzf eza bat
     htop btop ncdu
   ];
 
