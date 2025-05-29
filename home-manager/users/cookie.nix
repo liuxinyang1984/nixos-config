@@ -25,18 +25,15 @@
   
   # 自定义文件
   home.file = {
-    # 添加自定义脚本
-    ".local/bin/cookie-script".text = ''
-      #!/bin/zsh
-      echo "Hello, Cookie!"
-    '';
-  };
-     # 引用外部 authorized_keys 文件
     ".ssh/authorized_keys".source = ../../ssh/authorized_keys;
+  };
 
-    ".ssh".directory = {
+  # 管理目录权限
+  home.directories = {
+    ".ssh" = {
       recursive = true;
       permissions = "0700";
     };
+  };
 
 }
