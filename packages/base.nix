@@ -11,7 +11,7 @@
     btop
   ];
 
-  // 其它软件引用
+  # 其它软件引用
   imports = [
     ../modules/ssh.nix
   ];
