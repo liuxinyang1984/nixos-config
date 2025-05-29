@@ -26,6 +26,10 @@
   
   # 自定义文件
   home.file = {
-    ".ssh/authorized_keys".source = ../ssh/authorized_keys;
+  ".ssh/authorized_keys" = {
+    source = ../../ssh/authorized_keys;
+    permissions = "0600";
   };
+};
+
 }
