@@ -86,13 +86,31 @@ in {
   services.mysql = {
   enable = true;
   package = pkgs.mariadb;
+  
+  # 数据库初始化
+  ensureDatabases = [ "default_db" ];
+  
+  # 用户初始化
+  ensureUsers = [
+    {
+      name = "admin";
+      ensurePermissions = {
+        "*.*" = "ALL PRIVILEGES";
+      };
+    }
+  ];
+  
+  # 所有配置放在这里
   settings.mysqld = {
+    # 网络配置
     "skip-networking" = false;
-    bind-address = "0.0.0.0";  # 允许远程访问（可选）
+    "bind-address" = "0.0.0.0";
   };
+  
+  # 正确设置 init-file
   initialScript = pkgs.writeText "mysql-init.sql" ''
-    CREATE USER 'admin'@'localhost' IDENTIFIED BY 'xmlxzl';
-    GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost';
+    ALTER USER 'admin'@'localhost' IDENTIFIED BY 'xmlxzl';
+    FLUSH PRIVILEGES;
   '';
 };
 
