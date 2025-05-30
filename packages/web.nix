@@ -82,23 +82,19 @@ in {
     };
   };
 
-  services.mysql = {
+  # mariadb数据库服务
+    services.mysql = {
     enable = true;
     package = pkgs.mariadb;
     dataDir = "/var/lib/mysql";
 
     initialScript = pkgs.writeText "init.sql" ''
-      CREATE USER IF NOT EXISTS 'admin'@'localhost';
-      GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;
+      ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'xmlxzl';
+      GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
       FLUSH PRIVILEGES;
     '';
 
     ensureDatabases = [ "app_db" ];
-    ensureUsers = [{
-      name = "admin";
-      ensurePermissions = { "app_db.*" = "ALL PRIVILEGES"; };
-    }];
-
     settings.mysqld = {
       bind-address = "127.0.0.1";
       pid-file = "/run/mysqld/mysqld.pid";
@@ -106,6 +102,8 @@ in {
     };
   };
 
+    
+  # redis服务
   services.redis.servers."" = {
     enable = true;
   };
