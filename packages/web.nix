@@ -85,7 +85,7 @@ in {
   # mariadb数据库服务
     services.mysql = {
     enable = true;
-    package = pkgs.mariadb;
+    # package = pkgs.mariadb;
     dataDir = "/var/lib/mysql";
 
     initialScript = pkgs.writeText "init.sql" ''
