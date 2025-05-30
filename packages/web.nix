@@ -83,22 +83,17 @@ in {
   };
 
   # mariadb数据库服务
-    services.mysql = {
+  services.mysql = {
     enable = true;
-    # package = pkgs.mariadb;
-    dataDir = "/var/lib/mysql";
+    package = pkgs.mariadb; # 使用默认版本，也可以不写
+    initialRootPassword = "xmlxzl";
 
-    initialScript = pkgs.writeText "init.sql" ''
-      ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'xmlxzl';
-      GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;
-      FLUSH PRIVILEGES;
-    '';
-
-    ensureDatabases = [ "app_db" ];
-    settings.mysqld = {
-      bind-address = "127.0.0.1";
-      pid-file = "/run/mysqld/mysqld.pid";
-      socket = "/run/mysqld/mysqld.sock";
+    settings = {
+      # 允许用 socket 登录（即 mysql -uroot 无密码）
+      # 注意：这在安全性上适用于本地 root 用户
+      skip-networking = false;  # 开启 TCP 网络连接（可选）
+      # `unix_socket` 插件用于无密码登录
+      # 下面这项不是必须的，但你也可以手动设置 plugin
     };
   };
 
