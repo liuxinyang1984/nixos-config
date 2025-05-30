@@ -1,3 +1,4 @@
+#packages/desktop/hyprland.nix
 { pkgs, ... }:
 
 {

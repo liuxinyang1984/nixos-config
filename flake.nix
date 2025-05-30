@@ -37,6 +37,7 @@
           ./hosts/default.nix
           ./modules/virtio.nix
           ./packages/base.nix
+          ./packages/desktop/hyprland.nix
           home-manager.nixosModules.home-manager {
             home-manager = {
               useGlobalPkgs = true;
