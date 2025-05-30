@@ -35,6 +35,21 @@ let
     ${php82}/bin/php ${pkgs.phpPackages.composer}/bin/composer "$@"
   '';
 
+  php74conf = pkgs.writeText "php74.conf" ''
+    location ~ \.php$ {
+      fastcgi_pass unix:/run/phpfpm/php74.sock;
+      include ${pkgs.nginx}/conf/fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+  '';
+
+  php82conf = pkgs.writeText "php82.conf" ''
+    location ~ \.php$ {
+      fastcgi_pass unix:/run/phpfpm/php82.sock;
+      include ${pkgs.nginx}/conf/fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+  '';
 in {
   environment.systemPackages = [
     pkgs.nginx pkgs.mariadb pkgs.redis pkgs.rabbitmq-server
@@ -50,70 +65,45 @@ in {
 
   services.nginx = {
     enable = true;
-    recommendedOptimisation = true;
-    recommendedGzipSettings = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
 
-    # 加载 sites-enabled 下的所有 conf 文件
-    configFile = pkgs.writeText "nginx.conf" ''
-      user nginx;
-      worker_processes auto;
-      error_log /var/log/nginx/error.log warn;
-      pid /run/nginx.pid;
-
-      events {
-        worker_connections 1024;
-      }
-
-      http {
-        include       ${pkgs.nginx}/conf/mime.types;
-        default_type  application/octet-stream;
-
-        sendfile        on;
-        keepalive_timeout  65;
-
-        include /etc/nginx/sites-enabled/*.conf;
-      }
+    appendHttpConfig = ''
+      include /etc/nginx/sites-enabled/*.conf;
     '';
+
+    virtualHosts."localhost" = {
+      locations."/" = { root = "/var/www/html"; };
+      locations."~ \.php$" = {
+        extraConfig = ''
+          fastcgi_pass unix:/run/phpfpm/php74.sock;
+          include ${pkgs.nginx}/conf/fastcgi_params;
+          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        '';
+      };
+    };
   };
-
-  system.activationScripts.setup-nginx-sites = lib.stringAfter [ "users" ] ''
-    mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled
-    mkdir -p /etc/nginx
-    ln -sf /etc/nginx/sites-available /etc/nginx/sites-enabled
-    cat > /etc/nginx/php74.conf <<EOF
-fastcgi_pass unix:${config.services.phpfpm.pools.php74.settings.listen};
-include ${pkgs.nginx}/conf/fastcgi_params;
-fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-EOF
-
-    cat > /etc/nginx/php82.conf <<EOF
-fastcgi_pass unix:${config.services.phpfpm.pools.php82.settings.listen};
-include ${pkgs.nginx}/conf/fastcgi_params;
-fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-EOF
-  '';
 
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
-    initialScript = pkgs.writeText "mariadb-init.sql" ''
+    dataDir = "/var/lib/mysql";
+
+    initialScript = pkgs.writeText "init.sql" ''
       CREATE USER IF NOT EXISTS 'admin'@'localhost';
       GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;
       FLUSH PRIVILEGES;
     '';
-    dataDir = "/var/lib/mysql";
-    settings.mysqld = {
-      bind-address = "127.0.0.1";
-      pid-file = "/run/mysqld/mysqld.pid";
-      socket = "/run/mysqld/mysqld.sock";
-    };
+
     ensureDatabases = [ "app_db" ];
     ensureUsers = [{
       name = "admin";
       ensurePermissions = { "app_db.*" = "ALL PRIVILEGES"; };
     }];
+
+    settings.mysqld = {
+      bind-address = "127.0.0.1";
+      pid-file = "/run/mysqld/mysqld.pid";
+      socket = "/run/mysqld/mysqld.sock";
+    };
   };
 
   services.redis.servers."" = {
@@ -130,8 +120,8 @@ EOF
       user = "nginx";
       phpPackage = php74;
       settings = {
-        listen = "/run/phpfpm/php74.sock";
-        pm = "dynamic";
+        "listen" = "/run/phpfpm/php74.sock";
+        "pm" = "dynamic";
         "pm.max_children" = 10;
         "pm.start_servers" = 2;
         "pm.min_spare_servers" = 1;
@@ -148,8 +138,8 @@ EOF
       user = "nginx";
       phpPackage = php82;
       settings = {
-        listen = "/run/phpfpm/php82.sock";
-        pm = "ondemand";
+        "listen" = "/run/phpfpm/php82.sock";
+        "pm" = "ondemand";
         "pm.max_children" = 25;
       };
       phpOptions = ''
@@ -170,6 +160,12 @@ EOF
     mkdir -p /var/www/html
     chown nginx:nginx /var/www/html
     chmod 755 /var/www/html
+
+    mkdir -p /etc/nginx/sites-available
+    mkdir -p /etc/nginx/sites-enabled
+
+    cp ${php74conf} /etc/nginx/php74.conf
+    cp ${php82conf} /etc/nginx/php82.conf
   '';
 
   systemd.services = {
