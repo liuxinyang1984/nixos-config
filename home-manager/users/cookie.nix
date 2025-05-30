@@ -11,7 +11,7 @@
   home.username = "cookie";
   home.homeDirectory = "/home/cookie";
 
-  home.stateVersion = "23.05";  # 必须设置，匹配你NixOS版本
+  home.stateVersion = "25.11";  # 必须设置，匹配你NixOS版本
   # 个人软件包
   home.packages = with pkgs; [
     # 开发工具

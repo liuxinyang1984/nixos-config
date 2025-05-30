@@ -84,9 +84,14 @@ in {
 
   # mariadb数据库服务
   services.mysql = {
-    enable = true;
-    package = pkgs.mariadb;  # 使用 MariaDB 服务器包
+  enable = true;
+  package = pkgs.mariadb;
+  settings.mysqld = {
+    "skip-networking" = false;
+    bind-address = "0.0.0.0";  # 允许远程访问（可选）
   };
+  initialScript = "";
+};
 
 
     
