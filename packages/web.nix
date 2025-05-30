@@ -90,7 +90,10 @@ in {
     "skip-networking" = false;
     bind-address = "0.0.0.0";  # 允许远程访问（可选）
   };
-  initialScript = "";
+  initialScript = pkgs.writeText "mysql-init.sql" ''
+    CREATE USER 'admin'@'localhost' IDENTIFIED BY 'xmlxzl';
+    GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost';
+  '';
 };
 
 
