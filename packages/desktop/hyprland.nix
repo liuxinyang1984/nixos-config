@@ -23,8 +23,8 @@
     hyprpolkitagent # 身份验证代理
     wl-clipboard   # 剪切板管理
     brightnessctl  # 亮度调节（笔记本）
-    network-manager-applet  # 网络管理小程序
-    xorg.xwayland  # X11 兼容层
+    networkmanagerapplet  # 网络管理小程序
+    xwayland  # X11 兼容层
     # 其它和Hyprland桌面环境相关的软件包...
   ];
 

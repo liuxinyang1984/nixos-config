@@ -4,7 +4,7 @@
 {
   environment.systemPackages = with pkgs; [
     papirus-icon-theme
-    gnome.adwaita-icon-theme
+    adwaita-icon-theme
     qogir-theme
     bibata-cursors
   ];
