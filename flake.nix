@@ -8,36 +8,43 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-phps = {
+      url = "github:fossar/nix-phps";
+      inputs.nixpkgs.follows = "nixpkgs";  # 继承主 nixpkgs 版本
+    };
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations = {
-      cookie-pc = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./hosts/default.nix
-          ./packages/base.nix
-
-          # Home Manager for cookie user
-          home-manager.nixosModules.home-manager {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = { inherit inputs; };
-              
-              # Cookie user configuration
-              users.cookie = import ./home-manager/users/cookie.nix;
-            };
-          }
-        ];
-      };
+      # cookie-pc = nixpkgs.lib.nixosSystem {
+        # system = "x86_64-linux";
+        # modules = [
+          # ./hosts/default.nix
+          # ./packages/base.nix
+#
+          # # Home Manager for cookie user
+          # home-manager.nixosModules.home-manager {
+            # home-manager = {
+              # useGlobalPkgs = true;
+              # useUserPackages = true;
+              # extraSpecialArgs = { inherit inputs; };
+              #
+              # # Cookie user configuration
+              # users.cookie = import ./home-manager/users/cookie.nix;
+            # };
+          # }
+        # ];
+      # };
       cookie-kvm = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        # 关键：传递 inputs 给所有模块
+        specialArgs = { inherit inputs; };
         modules = [
           ./hosts/default.nix
           ./modules/virtio.nix
           ./packages/base.nix
           ./packages/desktop/hyprland.nix
+          ./packages/web.nix
           home-manager.nixosModules.home-manager {
             home-manager = {
               useGlobalPkgs = true;
