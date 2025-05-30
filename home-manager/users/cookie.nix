@@ -1,5 +1,5 @@
 #home-manager/users/cookie.nix
-{ pkgs, ... }:
+{ pkgs, lib, ... }:  # Add 'lib' here
 
 {
   imports = [
@@ -26,10 +26,12 @@
   
   # 自定义文件
   home.file = {
-  ".ssh/authorized_keys" = {
-    source = ../ssh/authorized_keys;
-    permissions = "0600";
-  };
+  ".ssh/authorized_keys".source = ../ssh/authorized_keys;
 };
+
+home.activation.setSshPerms = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  chmod 700 ~/.ssh
+  chmod 600 ~/.ssh/authorized_keys
+'';
 
 }
