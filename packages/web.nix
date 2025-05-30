@@ -86,11 +86,6 @@ in {
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;  # 使用 MariaDB 服务器包
-    settings = {
-      mysqld = {
-        "skip-networking" = false;  # 开启 TCP 网络，允许远程或本地 TCP 登录
-      };
-    };
   };
 
 
