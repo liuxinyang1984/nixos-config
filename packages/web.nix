@@ -85,17 +85,12 @@ in {
   # mariadb数据库服务
   services.mysql = {
     enable = true;
-    package = pkgs.mariadb; # 使用默认版本，也可以不写
-    initialRootPassword = "xmlxzl";
-
+    package = pkgs.mariadb;  # 使用 MariaDB 服务器包
     settings = {
-      # 允许用 socket 登录（即 mysql -uroot 无密码）
-      # 注意：这在安全性上适用于本地 root 用户
-      skip-networking = false;  # 开启 TCP 网络连接（可选）
-      # `unix_socket` 插件用于无密码登录
-      # 下面这项不是必须的，但你也可以手动设置 plugin
+      skip-networking = false;  # 开启 TCP 网络，允许远程或本地 TCP 登录
     };
   };
+
 
     
   # redis服务
