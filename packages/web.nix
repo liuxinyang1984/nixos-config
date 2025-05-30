@@ -101,12 +101,35 @@ in
     };
   };
   
+  # mysql数据库
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
+    
+    # 关键修复：添加初始设置
+    initialScript = pkgs.writeText "mariadb-init.sql" ''
+      CREATE USER IF NOT EXISTS 'admin'@'localhost';
+      GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost' WITH GRANT OPTION;
+      FLUSH PRIVILEGES;
+    '';
+    
+    # 确保数据目录存在
+    dataDir = "/var/lib/mysql";
+    
+    # 添加基本设置
+    settings = {
+      mysqld = {
+        bind-address = "127.0.0.1";
+        # 确保 systemd 能正确识别服务类型
+        pid-file = "/run/mysqld/mysqld.pid";
+        socket = "/run/mysqld/mysqld.sock";
+      };
+    };
+    
+    # 确保数据库和用户存在
     ensureDatabases = [ "app_db" ];
     ensureUsers = [{
-      name = "app_user";
+      name = "admin";
       ensurePermissions = { "app_db.*" = "ALL PRIVILEGES"; };
     }];
   };
