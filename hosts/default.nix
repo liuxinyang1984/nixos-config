@@ -8,12 +8,12 @@
 
  # 文件系统
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/a60de916-b11b-469c-969b-186b9c8bba45";
+    device = "/dev/disk/by-label/nix-root";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/6046-818A";
+    device = "/dev/disk/by-label/EFI";
     fsType = "vfat";
   };
 
