@@ -8,6 +8,7 @@
     ../../modules/fonts.nix
     ../../modules/themes.nix
     ../../modules/media.nix
+    ../../modules/fcitx.nix
   ];
 
   environment.systemPackages = with pkgs; [
