@@ -1,24 +1,23 @@
-#packages/desktop/fcitx5
-{ pkgs, config, lib, ... }:
+# modules/fcitx.nix
+{ config, pkgs, ... }:
 
 {
-  # 配置输入法系统
-  programs.i18n.inputMethod = {
-    enable = true;
-    # 启用 fcitx5 输入法框架
-    fcitx5.enable = true;
-    # 设置默认的五笔输入法
-    fcitx5.default = "rime.five_stroke";  # 或者其他五笔输入法
-    # 启用 Wayland 支持（如果使用 Wayland）
-    fcitx5.enableWayland = true;
+  # 启用 Fcitx5 输入法框架
+  i18n.inputMethod = {
+    enable = true;  # 启用输入法
+    type = "fcitx5";  # 设置输入法类型为 fcitx5
+    fcitx5.waylandFrontend = true;
+    fcitx5.addons = with pkgs; [
+      fcitx5-chinese-addons  # 中文输入支持 (拼音、五笔等)
+      #fcitx5-rime             # Rime 输入引擎 (中州韵)
+      #fcitx5-gtk              # GTK 程序支持
+    ];
   };
 
-  # 安装必要的软件包
-  environment.systemPackages = with pkgs; [
-    fcitx5          # fcitx5 框架
-    fcitx5-rime     # rime 输入法（五笔、拼音等）
-  ];
-
-
+  # 可选：配置默认输入法 (例如设置为拼音)
+  environment.variables = {
+    GTK_IM_MODULE = "fcitx";
+    QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
+  };
 }
-
