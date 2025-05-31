@@ -82,23 +82,7 @@ in {
     };
   };
 
-  # mariadb数据库服务
-  services.mysql = {
-  enable = true;
-  package = pkgs.mariadb;
-  
-  # 数据库初始化
-  ensureDatabases = [ "default_db" ];
-  
-  # 用户初始化
-  ensureUsers = [
-    {
-      name = "admin";
-      ensurePermissions = {
-        "*.*" = "ALL PRIVILEGES";
-      };
-    }
-  ];
+
   
   # 所有配置放在这里
   settings.mysqld = {
