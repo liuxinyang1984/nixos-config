@@ -22,9 +22,10 @@
         specialArgs = { inherit inputs; };
         modules = [
           ./hosts/default.nix
-          ./modules/virtio.nix
+          ./modules/nvidia.nix
           ./packages/base.nix
           ./packages/desktop/hyprland.nix
+          ./packages/desktop/plasma6.nix
           ./packages/web.nix
           home-manager.nixosModules.home-manager {
             home-manager = {

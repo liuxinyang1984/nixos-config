@@ -12,6 +12,8 @@
 
   environment.systemPackages = with pkgs; [
     hyprland
+    xdg-desktop-portal
+    xdg-desktop-portal-hyprland
     foot           # 终端
     waybar         # 状态栏
     wofi           # 启动器
@@ -34,6 +36,13 @@
     XDG_SESSION_TYPE = "wayland";
     GDK_BACKEND = "wayland";
     QT_QPA_PLATFORM = "wayland";
+    
+    LIBVA_DRIVER_NAME = "nvidia";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    GBM_BACKEND = "nvidia-drm";
+    __NV_PRIME_RENDER_OFFLOAD = "1";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    WLR_RENDERER_ALLOW_SOFTWARE = "1";
   };
 }
 
