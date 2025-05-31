@@ -84,22 +84,6 @@ in {
 
 
   
-  # 所有配置放在这里
-  settings.mysqld = {
-    # 网络配置
-    "skip-networking" = false;
-    "bind-address" = "0.0.0.0";
-  };
-  
-  # 正确设置 init-file
-  initialScript = pkgs.writeText "mysql-init.sql" ''
-    ALTER USER 'admin'@'localhost' IDENTIFIED BY 'xmlxzl';
-    FLUSH PRIVILEGES;
-  '';
-};
-
-
-    
   # redis服务
   services.redis.servers."" = {
     enable = true;
@@ -174,7 +158,6 @@ in {
 
   systemd.targets.multi-user.requires = [
     "nginx.service"
-    "mariadb.service"
     "redis.service"
     "rabbitmq.service"
     "phpfpm-php74.service"
