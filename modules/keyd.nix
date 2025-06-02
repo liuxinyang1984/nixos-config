@@ -6,6 +6,7 @@
   services.keyd.enable = true;
 
   # 设置配置文件路径
-  environment.etc."keyd/config".source = ../etc/keyd/config;
+  # environment.etc."keyd/config".source = ../etc/keyd/config;
+  environment.etc."keyd/default.conf".source = ../etc/keyd/config;
 }
 

@@ -1,0 +1,10 @@
+# keyd配置文件示例
+
+# 将 Caps Lock 键映射为 Esc 键
+[rule]
+keycode(58) = esc
+
+# Shift + Caps Lock 键映射为 Caps Lock
+[rule]
+modifier(Shift) + keycode(66) = capslock
+

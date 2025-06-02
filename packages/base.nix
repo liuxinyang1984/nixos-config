@@ -1,7 +1,9 @@
+# packages/base.nix
 { pkgs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
+    unzip
     git
     curl
     wget
@@ -9,6 +11,9 @@
     eza
     bat
     btop
+    xorg.xinput
+    busybox
+    pulsemixer
   ];
 
   # 其它软件引用
@@ -16,5 +21,6 @@
     ../modules/ssh.nix
     ../modules/v2ray.nix
     ../modules/keyd.nix
+    ../modules/flatpak.nix
   ];
 }

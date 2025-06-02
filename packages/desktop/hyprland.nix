@@ -16,6 +16,7 @@
     xdg-desktop-portal
     xdg-desktop-portal-hyprland
     foot           # 终端
+    swww           # 壁纸
     waybar         # 状态栏
     wofi           # 启动器
     grim           # 截图

@@ -1,4 +1,4 @@
-#home-manager/users/cookie.nix
+# home-manager/users/cookie.nix
 { pkgs, lib, ... }:  # Add 'lib' here
 
 {
@@ -15,12 +15,48 @@
   # 个人软件包
   home.packages = with pkgs; [
     # 开发工具
-    nodejs python3 go rustc
+    nodejs python3 go rustc mycli yazi
     
     # 系统工具
     duf dust procs
     
     # 图形应用
-    firefox vscode
+    firefox vscode google-chrome
+    # 微信
+    wechat-uos
   ];
+
+  # 鼠标指针主题
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    name = "Bibata-Modern-Ice";
+    size = 24;
+    package = pkgs.bibata-cursors;
+  };
+
+  home.sessionVariables = {
+    XCURSOR_THEME = "Bibata-Modern-Ice";
+    XCURSOR_SIZE = "24";
+  };
+
+
+  # flatpak 环境变量
+  #home.sessionVariables = {
+  #  # 这里直接用系统默认的 XDG_DATA_DIRS，加上 Flatpak 的路径
+  #  # 注意不能用 builtins.getEnv，因为 nix 语言阶段读不到外部环境变量，
+  #  # 所以这里写了常用的系统默认路径，后面追加 flatpak 路径。
+  #  XDG_DATA_DIRS = lib.concatStringsSep ":" [
+  #    "/usr/share"
+  #    "/usr/local/share"
+  #    "/var/lib/flatpak/exports/share"
+  #    "/home/cookie/.local/share/flatpak/exports/share"
+  #  ];
+  #};
+  programs.zsh = {
+    initContent = ''
+      # 动态追加 Flatpak 路径到 XDG_DATA_DIRS，避免覆盖系统默认值
+      export XDG_DATA_DIRS="$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share"
+    '';
+  };
 }

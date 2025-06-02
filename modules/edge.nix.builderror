@@ -1,0 +1,107 @@
+# modules/edge.nix
+{ config, lib, pkgs, ... }:
+
+let
+  # 在此处替换为实际的 .deb URL 和 SHA256 哈希值
+  debUrl = "'https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_137.0.3296.52-1_amd64.deb";
+  debSha256 = "0drxv3hdzj979qsrnxdvllxfbraq4hyacrbmxhq6a30xwrsiq15j";
+in
+{
+  options = {
+    edge.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "是否启用 Microsoft Edge 安装";
+    };
+  };
+
+  config = lib.mkIf config.edge.enable {
+    nixpkgs.overlays = [
+      (self: super: {
+        microsoft-edge = super.stdenv.mkDerivation rec {
+          pname = "microsoft-edge";
+          version = "stable";
+
+          src = super.fetchurl {
+            url = debUrl;
+            sha256 = debSha256;
+          };
+
+          nativeBuildInputs = [
+            super.dpkg
+            super.autoPatchelfHook
+            super.makeWrapper
+          ];
+
+          # 使用 super.xorg 访问 X11 相关库
+          buildInputs = [
+            super.gtk3
+            super.nss
+            super.alsa-lib
+            super.libdrm
+            super.libxkbcommon
+            super.xorg.libX11
+            super.xorg.libXcomposite
+            super.xorg.libXdamage
+            super.xorg.libXext
+            super.xorg.libXfixes
+            super.xorg.libXrandr
+            super.xorg.libxshmfence  # 正确引用位置
+            super.nspr
+            super.cups
+            super.xorg.libxcb
+          ];
+
+          unpackPhase = ''
+            dpkg-deb -x $src .
+          '';
+
+          installPhase = ''
+            mkdir -p $out
+            cp -R usr/* $out
+            
+            # 修复库路径
+            ln -s ${super.gtk3}/lib/gdk-pixbuf-2.0 $out/lib/gdk-pixbuf-2.0 || true
+            
+            # 包装主程序
+            makeWrapper $out/bin/microsoft-edge $out/bin/.edge-wrapped \
+              --prefix LD_LIBRARY_PATH : "${super.lib.makeLibraryPath buildInputs}" \
+              --prefix PATH : "${super.lib.makeBinPath [ super.glib super.zenity ]}"
+          '';
+
+          postFixup = ''
+            # 修复桌面文件
+            substituteInPlace $out/share/applications/microsoft-edge.desktop \
+              --replace /usr/bin/microsoft-edge $out/bin/microsoft-edge
+            
+            # 修复图标
+            sed -i 's|Icon=.*|Icon=microsoft-edge|' $out/share/applications/microsoft-edge.desktop
+            mkdir -p $out/share/icons/hicolor/256x256/apps
+            ln -s $out/share/icons/hicolor/default/apps/microsoft-edge.png $out/share/icons/hicolor/256x256/apps/ || true
+          '';
+
+          meta = with lib; {
+            homepage = "https://www.microsoft.com/edge";
+            description = "Microsoft Edge 浏览器";
+            license = licenses.unfree;
+            platforms = [ "x86_64-linux" ];
+            maintainers = [];
+          };
+        };
+      })
+    ];
+
+    environment.systemPackages = [ pkgs.microsoft-edge ];
+
+    # 添加必要的环境变量
+    environment.variables = {
+      NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [
+        pkgs.stdenv.cc.cc.lib
+        pkgs.libxkbcommon
+        pkgs.libdrm
+        pkgs.xorg.libxshmfence  # 这里使用 pkgs.xorg 引用
+      ];
+      NIX_LD = lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
+    };
+  };
+}

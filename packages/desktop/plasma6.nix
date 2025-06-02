@@ -10,7 +10,7 @@
   ];
 
   services.desktopManager.plasma6.enable = true;
-  services.displayManager.sddm.enable = false;
+  services.displayManager.sddm.enable = true;
 
   #i18n.inputMethod.enabled = "fcitx5";
 }
