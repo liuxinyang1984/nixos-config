@@ -15,6 +15,8 @@
     hyprland
     xdg-desktop-portal
     xdg-desktop-portal-hyprland
+    jq             # Json数据操作
+    cliphist       # 剪贴板历史
     foot           # 终端
     swww           # 壁纸
     waybar         # 状态栏
@@ -22,7 +24,10 @@
     grim           # 截图
     mako           # 通知
     swaybg         # 壁纸
+    swaylock       # 锁屏
     swappy         # 截图处理
+    slurp          # 交互式选择区域
+    libnotify      # 发送桌面通知
     hyprlock       # 屏幕锁定
     hyprpolkitagent # 身份验证代理
     wl-clipboard   # 剪切板管理
