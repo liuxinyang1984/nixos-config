@@ -11,6 +11,15 @@
     };
   };
 
+  # root用户公钥文件
+  users.users.root.openssh.authorizedKeys.keyFiles = [
+    ./../etc/ssh/authorized_keys
+  ];
+  # cookie用户公钥文件
+  users.users.cookie.openssh.authorizedKeys.keyFiles = [
+    ./../etc/ssh/authorized_keys
+  ];
+
   networking.firewall.allowedTCPPorts = [ 22 ]; # 开放 SSH 端口
 }
 

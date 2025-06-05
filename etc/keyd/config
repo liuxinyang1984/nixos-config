@@ -2,15 +2,15 @@
 *
 
 [main]
-# Shift + Capslock 变 Capslock
-leftshift+capslock = capslock
-
 # 按下 Capslock 时变为 Esc，长按 Capslock 时仍然为 Capslock
 capslock = esc
-
 
 # Esc 变为反引号 `
 esc = grave
 
+[shift]
 # Shift + Esc 变为 ~
-shift+esc = tilde
+esc = assiitilde
+
+# Shift + capslock 变为capslock 
+capslock = capslock
