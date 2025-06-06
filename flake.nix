@@ -31,6 +31,7 @@
           ./packages/desktop/plasma6.nix
           ./packages/web.nix
           ./modules/mariadb.nix
+          ./modules/kvm.nix
           home-manager.nixosModules.home-manager {
             home-manager = {
               useGlobalPkgs = true;
