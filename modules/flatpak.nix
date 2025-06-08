@@ -11,8 +11,8 @@
     pkgs.kdePackages.xdg-desktop-portal-kde
   ];
 
-  # 修复警告
-  xdg.portal.config = {
-    common.default = "*";
-  };
+  # # 修复警告
+  # xdg.portal.config = {
+    # common.default = "*";
+  # };
 }

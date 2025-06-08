@@ -1,24 +1,18 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
-  options.kvm.enable = lib.mkEnableOption "Enable KVM/QEMU/libvirt virtualization stack";
+  environment.systemPackages = with pkgs; [
+    virt-manager
+    qemu
+    spice-gtk
+    dnsmasq
+    libguestfs
+  ];
 
-  config = lib.mkIf config.kvm.enable {
-    # 安装系统级虚拟化工具
-    environment.systemPackages = with pkgs; [
-      virt-manager
-      qemu
-      spice-gtk
-      dnsmasq
-      libguestfs
-    ];
+  virtualisation.libvirtd.enable = true;
 
-    # 启用 libvirt 服务（提供虚拟化 API）
-    virtualisation.libvirtd.enable = true;
+  services.dbus.enable = true;
 
-    # 启用系统所需权限服务
-    services.dbus.enable = true;
-    security.polkit.enable = true;
-  };
+  security.polkit.enable = true;
 }
 

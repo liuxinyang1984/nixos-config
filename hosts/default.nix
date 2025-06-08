@@ -30,7 +30,7 @@
   users.users.cookie = {
     isNormalUser = true;
     description = "Cookie User";
-    extraGroups = [ "wheel" "networkmanager" "audio" "video" "kvm" "libvirtd" ];
+    extraGroups = [ "wheel" "networkmanager" "audio" "video" "kvm" "libvirtd" "input" ];
     shell = pkgs.zsh;
   };
 

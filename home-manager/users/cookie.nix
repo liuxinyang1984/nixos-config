@@ -18,12 +18,12 @@
     nodejs python3 go rustc mycli yazi
     
     # 系统工具
-    duf dust procs
+    duf dust procs transmission_4-qt
     
     # 图形应用
     firefox vscode google-chrome
     # 微信
-    wechat-uos
+    wechat-uos steam
   ];
 
   # 鼠标指针主题

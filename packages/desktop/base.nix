@@ -3,6 +3,7 @@
 
 {
   environment.systemPackages = with pkgs; [
+    freerdp
     xorg.xrandr
     xdg-utils
     xdg-user-dirs
@@ -11,7 +12,7 @@
     xfce.thunar
     xfce.thunar-archive-plugin
     xfce.thunar-volman
-    
+    uget
     # 添加 Microsoft Edge（如果已启用）
   ];
 }

@@ -51,5 +51,12 @@
     WLR_NO_HARDWARE_CURSORS = "1";
     WLR_RENDERER_ALLOW_SOFTWARE = "1";
   };
+    # XDG Portal 配置
+  xdg.portal = {
+    enable = true;
+    config = {
+      common.default = "hyprland";
+    };
+  };
 }
 
