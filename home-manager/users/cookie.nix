@@ -16,6 +16,7 @@
   home.packages = with pkgs; [
     # 开发工具
     nodejs python3 go rustc mycli yazi
+    android-studio
     
     # 系统工具
     duf dust procs transmission_4-qt
