@@ -19,6 +19,7 @@ mount /dev/vda1 /mnt/boot/efi
 ## 安装
 ```shell
 sudo nixos-install --root /mnt --flake /home/nixos/nixos-config#NixOs
+sudo nixos-rebuild switch --flake .#cookie-pc --option substituters "https://mirrors.ustc.edu.cn/nix-channels/store"
 ```
 
 ## 清理启动项

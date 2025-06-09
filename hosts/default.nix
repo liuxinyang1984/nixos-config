@@ -4,7 +4,7 @@
 {
   # 基础系统配置
   networking.hostName = "NixOs";
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 
  # 文件系统
   fileSystems."/" = {
@@ -15,6 +15,10 @@
   fileSystems."/boot" = {
     device = "/dev/disk/by-label/EFI";
     fsType = "vfat";
+  };
+  fileSystems."/home" = {
+    device = "/dev/disk/by-label/nix-home";
+    fsType = "ext4";
   };
 
   # 引导加载器设置
@@ -35,7 +39,20 @@
   };
 
   # 启用 flakes
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings = {
+    substituters = [
+      "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+      "https://mirrors.ustc.edu.cn/nix-cache/"
+      "https://cache.nixos.org/"
+    ];
+    trusted-public-keys = [
+      "nixos.org-1:Zy6IWH2qLgjAyf23n70hZFXVYZn4OH1W+iViZpx4txQ="
+      "cache.nixos.org-1:..."  # 这个你保留原来的，不用删
+    ];
+    experimental-features = [ "nix-command" "flakes" ];
+    auto-optimise-store = true;
+  };
 
   # 允许非自由软件
   nixpkgs.config.allowUnfree = true;
