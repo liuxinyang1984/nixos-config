@@ -17,7 +17,7 @@
     # 开发工具
     nodejs python3 go rustc mycli yazi
     android-studio
-    androidenv.androidPkgs.emulator
+    # androidenv.androidPkgs.emulator
     # androidenv.androidPkgs.all.packages.emulator.v36
     # androidenv.androidPkgs.all.packages.emulator.v35_5_8
     
